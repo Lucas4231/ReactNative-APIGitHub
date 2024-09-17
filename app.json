@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "aulaIntro",
-    "slug": "aulaIntro",
+    "name": "flatList",
+    "slug": "flatList",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",

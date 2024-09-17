@@ -1,56 +1,56 @@
-import { Text, View, TouchableOpacity, FlatList} from'react-native';
-import {React} from 'react';
-import { useState } from 'react';
-import {SafeAreaView, TextInput} from 'react-native';
-import  { styles }  from './src/screens/tela1/styles.js';
-import { api } from './src/screens/apis/gitHubapi.js';
+import React, { useState } from 'react';
+import { View, Text, Button, FlatList, TextInput, Image } from 'react-native';
+import { api } from './src/services/api'; 
+import { styles } from './src/styles/styles'; 
+import github from './assets/github.png';
 
+function App() {
+  const [dados, setDados] = useState([]);
+  const [inputValue, setInputValue] = useState(''); 
 
-export default function App() {
-  
-  const [nomegit, setNameGit] = useState([]);
-  
-  async function consultarApiGit(){
-    const  response = await api.get(nomegit+'/repos');
-    console.log(response.data[0].name);
-    setNameGit(response.data.name);
+  async function searchDados() {
+    const response = await api.get(`${inputValue}` + '/repos');
+    console.log(response);
+    setDados(response.data);
   }
 
-  return(
+  return (
     <View style={styles.container}>
-        <Text style={styles.textTitle}>Entre com seu Usuário</Text>
-       
-          <SafeAreaView>
-            <TextInput
-              style={styles.input}
-              placeholder={'Buscar Repositórios'}
-              placeholderTextColor="#fff"
-              selectionColor={'#fff'}
-              
-          />
-          </SafeAreaView>
 
-          <TouchableOpacity
-              style={styles.button}
-              onPress={consultarApiGit}
-          >
-            <Text style={styles.textButton}> Consultar </Text>
-          </TouchableOpacity>  
-          
-          
-          <FlatList 
-          style={styles.list}
-          data={nomegit}
-          keyExtractor={dados => String(dados.name)}
-          showsVerticalScrollIndicator={false}
-         renderItem={({item:dados})=>(
-         <View style={styles.itemList}>
-          <Text>Nome do Repositório: {dados.name}</Text>
-        </View>
-          )}
-         />
+      <Image style={styles.viewimage} source={github}/>
 
+      <Text style={styles.textTitle}>Entre com seu Usuário</Text>
+
+      <View style={styles.inputContainer}>
+        <TextInput
+          style={styles.input}
+          placeholder={'Buscar Repositórios'}
+          placeholderTextColor="#fff"
+          selectionColor={'#fff'}
+          value={inputValue} // Vinculando o estado com o TextInput
+          onChangeText={setInputValue} // Atualizando o estado com o valor digitado
+        />
+      </View>
+
+      <View style={styles.buttonContainer}>
+        <Button color="#000" title="Consultar" onPress={searchDados} />
+        
+      </View>
+
+      <FlatList
+        style={styles.list}
+        data={dados}
+        keyExtractor={(item) => item.id.toString()}
+        renderItem={({ item }) => (
+          <View style={styles.itemList}>
+            <Text style={styles.itemText}>ID: {item.id}</Text>
+            <Text style={styles.itemText}>Name: {item.name}</Text>
+          </View>
+        )}
+      />
     </View>
   );
-};
+}
+
+export default App;
 
